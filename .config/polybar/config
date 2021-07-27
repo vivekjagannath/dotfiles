@@ -1,0 +1,138 @@
+[colors]
+background = #881d1f21
+background-alt = #881d1f21
+foreground = #c5c8c6
+foreground-alt = #c5c8c6
+spotify = #1db954
+red = #ff0000
+
+[bar/awesome]
+;monitor = ${env:MONITOR:HDMI-1}
+width = 100%
+height = 27
+;offset-x = 1%
+;offset-y = 1%
+fixed-center = true
+bottom = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 0
+line-color = #f00
+
+border-size = 0
+border-color = ${colors.background}
+
+padding-left = 2
+padding-right = 2
+
+module-margin-left = 2
+module-margin-right = 0
+
+font-0 = Dank Mono:size=11;0
+font-1 = FontAwesome:size=11;0
+font-2 = unifont:fontformat=truetype:size=8:antialias=false;0
+
+modules-left = spotify
+modules-center = date
+modules-right = pulseaudio eth battery
+
+tray-position = right
+tray-padding = 2
+;tray-transparent = true
+tray-background = ${colors.background}
+
+;wm-restack = bspwm
+;wm-restack = i3
+
+;override-redirect = true
+
+;scroll-up = bspwm-desknext
+;scroll-down = bspwm-deskprev
+
+;scroll-up = i3wm-wsnext
+;scroll-down = i3wm-wsprev
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+[module/eth]
+type = internal/network
+interface = docker0
+interval = 3.0
+
+format-connected-underline = #55aa55
+format-connected-prefix = " "
+format-connected-prefix-foreground = ${colors.foreground-alt}
+label-connected = %local_ip%
+
+format-disconnected =
+;format-disconnected = <label-disconnected>
+;format-disconnected-underline = ${self.format-connected-underline}
+;label-disconnected = %ifname% disconnected
+;label-disconnected-foreground = ${colors.foreground-alt}
+
+[module/date]
+type = internal/date
+interval = 5
+date = %A, %d %b  %H:%M
+format-prefix-foreground = ${colors.foreground-alt}
+label = %date%
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+format-volume = <ramp-volume> <label-volume>
+label-volume = %percentage%%
+label-volume-foreground = ${colors.foreground}
+
+label-muted = !
+label-muted-foreground = ${colors.foreground}
+
+ramp-volume-0 =  
+ramp-volume-1 =  
+ramp-volume-2 =  
+ramp-volume-foreground = ${colors.foreground}
+
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = ADP0
+full-at = 99
+
+format-charging-prefix = " " 
+format-charging = <label-charging>
+format-charging-foreground = ${colors.foreground}
+format-discharging = <ramp-capacity> <label-discharging>
+format-discharging-foreground = ${colors.foreground}
+format-full-prefix = 
+format-full-foreground = ${colors.foreground}
+
+ramp-capacity-0 =   
+ramp-capacity-0-foreground = ${colors.red}
+ramp-capacity-1 =   
+ramp-capacity-2 =   
+ramp-capacity-3 =   
+ramp-capacity-4 =   
+ramp-capacity-foreground = ${colors.foreground-alt}
+
+[module/spotify]
+type = custom/script
+interval = 1
+format-prefix = " "
+format-prefix-foreground = ${colors.spotify}
+format = <label>
+exec = python $HOME/.config/polybar/polybar-spotify.py -f '{song}: {artist}'
+click-left = playerctl --player=spotify play-pause 
+click-right = playerctl --player=spotify next 
+click-middle = playerctl --player=spotify previous 
+
+[settings]
+screenchange-reload = true
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+
+; vim:ft=dosini
