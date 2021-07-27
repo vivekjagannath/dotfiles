@@ -16,7 +16,7 @@
 "xbacklight +10"
   XF86MonBrightnessUp
 
-"flameshot full -p /home/vivek/Pictures/"
+"flameshot full -p $HOME/Pictures/Screenshots/"
   Print
 
 "flameshot full -c"
