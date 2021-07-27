@@ -1,0 +1,38 @@
+"amixer -D pulse sset Master 2%+"
+  XF86AudioRaiseVolume
+
+"amixer -D pulse sset Master 2%-"
+  XF86AudioLowerVolume
+
+"amixer -D pulse sset Master toggle"
+  XF86AudioMute
+
+"pactl set-source-mute @DEFAULT_SOURCE@ toggle"
+  XF86AudioMicMute
+
+"xbacklight -10"
+  XF86MonBrightnessDown
+
+"xbacklight +10"
+  XF86MonBrightnessUp
+
+"flameshot full -p /home/vivek/Pictures/"
+  Print
+
+"flameshot full -c"
+  Control + Print
+
+"flameshot gui"
+  Shift + Print
+
+"playerctl play-pause"
+  XF86AudioPlay
+
+"playerctl play-pause"
+  XF86AudioPause
+
+"playerctl next"
+  XF86AudioNext
+
+"playerctl previous"
+  XF86AudioPrev
