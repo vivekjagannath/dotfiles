@@ -45,7 +45,7 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+beautiful.init(gears.filesystem.get_configuration_dir() .. "mytheme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "alacritty"
@@ -61,22 +61,8 @@ modkey = "Mod4"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
-    -- awful.layout.suit.floating,
     awful.layout.suit.tile,
-    -- awful.layout.suit.tile.left,
-    -- awful.layout.suit.tile.bottom,
-    -- awful.layout.suit.tile.top,
-    -- awful.layout.suit.fair,
-    -- awful.layout.suit.fair.horizontal,
-    -- awful.layout.suit.spiral,
-    -- awful.layout.suit.spiral.dwindle,
-    -- awful.layout.suit.max,
-    -- awful.layout.suit.max.fullscreen,
-    -- awful.layout.suit.magnifier,
-    -- awful.layout.suit.corner.nw,
-    -- awful.layout.suit.corner.ne,
-    -- awful.layout.suit.corner.sw,
-    -- awful.layout.suit.corner.se,
+    awful.layout.suit.tile.left,
 }
 -- }}}
 
@@ -127,6 +113,16 @@ end
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 -- }}}
 
+local clock = awful.widget.watch("date +'%A, %d %b  %H:%M'", 60)
+local month_calendar = awful.widget.calendar_popup.month()
+month_calendar:attach( clock, "br" )
+
+local volume_widget = require("widgets/volume/volume")
+
+local w4 = wibox.widget {
+    spacing = -10,
+    layout = wibox.layout.flex.horizontal
+}
 
 local function set_wallpaper(s)
     -- Wallpaper
@@ -136,7 +132,7 @@ local function set_wallpaper(s)
         if type(wallpaper) == "function" then
             wallpaper = wallpaper(s)
         end
-        gears.wallpaper.maximized("$HOME/Pictures/Wallpapers/furka-pass-in-switzerland-photo-credit-to-sepp-rutz-1920×1080.jpg", s, true)
+        gears.wallpaper.maximized("$HOME/Pictures/Wallpapers/ign-0003.png", s, true)
     end
 end
 
@@ -149,9 +145,29 @@ awful.screen.connect_for_each_screen(function(s)
 
     -- Each screen has its own tag table.
     awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
+
+	-- @DOC_WIBAR@
+    -- Create the wibox
+    s.mywibox = awful.wibar({ position = "bottom", screen = s, height = 25, bg = "#1d1f21", fg = "#f8f8f2"})
+
+
+    -- @DOC_SETUP_WIDGETS@
+    -- Add widgets to the wibox
+    s.mywibox:setup {
+        layout = wibox.layout.align.horizontal,
+        { -- Left widgets
+            layout = wibox.layout.fixed.horizontal,
+        },
+		wibox.container.background(wibox.container.margin(clock, 870, 5)),
+        { -- Right widgets
+            layout = wibox.layout.fixed.horizontal,
+			volume_widget(),
+			w4,
+            wibox.widget.systray()
+        },
+    }		
 end)
 -- }}}
-
 -- {{{ Mouse bindings
 root.buttons(gears.table.join(
     awful.button({ }, 3, function () mymainmenu:toggle() end),
@@ -357,7 +373,7 @@ root.keys(globalkeys)
 awful.rules.rules = {
     -- All clients will match this rule.
     { rule = { },
-      properties = { border_width = beautiful.border_width,
+      properties = { border_width = 0,
                      border_color = beautiful.border_normal,
                      focus = awful.client.focus.filter,
                      raise = true,
@@ -401,10 +417,58 @@ client.connect_signal("manage", function (c)
         -- Prevent clients from being unreachable after screen count changes.
         awful.placement.no_offscreen(c)
     end
+    if c.class ~= "Polybar" and not c.maximized then
+        c.shape = function(cr,w,h)
+            gears.shape.rounded_rect(cr,w,h,5)
+        end
+    end
 end)
 }
+
+client.connect_signal("property::maximized", function (c)
+    if c.maximized then
+        c.shape = gears.shape.rectangle
+    else
+        c.shape = function(cr,w,h)
+            gears.shape.rounded_rect(cr,w,h,5)
+        end
+    end    
+end)
+
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+
+-- battery warning
+-- created by bpdp
+
+-- local function trim(s)
+--   return s:find'^%s*$' and '' or s:match'^%s*(.*%S)'
+-- end
+-- 
+-- local function bat_notification()
+--   
+--   local f_capacity = assert(io.open("/sys/class/power_supply/BAT0/capacity", "r"))
+--   local f_status = assert(io.open("/sys/class/power_supply/BAT0/status", "r"))
+-- 
+--   local bat_capacity = tonumber(f_capacity:read("*all"))
+--   local bat_status = trim(f_status:read("*all"))
+-- 
+--   if (bat_capacity <= 10 and bat_status == "Discharging") then
+--     naughty.notify({ title      = "Battery Warning"
+--       , text       = "Battery low! " .. bat_capacity .."%" .. " left!"
+--       , fg="#ff0000"
+--       , bg="#deb887"
+--       , timeout    = 15
+--       , position   = "bottom_left"
+--     })
+--   end
+-- end
+-- 
+-- battimer = timer({timeout = 120})
+-- battimer:connect_signal("timeout", bat_notification)
+-- battimer:start()
+
+-- end here for battery warning
 
 -- Gaps
 beautiful.useless_gap = 8
@@ -412,9 +476,9 @@ beautiful.useless_gap = 8
 -- Autostart
 awful.spawn.with_shell("xinput set-prop \"MSFT0001:01 04F3:304B Touchpad\" \"libinput Tapping Enabled\" 1")
 awful.spawn.with_shell("xinput set-prop \"MSFT0001:01 04F3:304B Touchpad\" \"libinput Natural Scrolling Enabled\" 1")
-awful.spawn.with_shell("compton")
+awful.spawn.with_shell("compton --backend glx --paint-on-overlay --glx-no-stencil --vsync opengl-swc --unredir-if-possible")
+awful.spawn.with_shell("xfce4-power-manager")
 awful.spawn.with_shell("nm-applet")
-awful.spawn.with_shell("$HOME/.config/polybar/launch.sh")
+-- awful.spawn.with_shell("$HOME/.config/polybar/launch.sh")
 awful.spawn.with_shell("xbindkeys --poll-rc")
-awful.spawn.with_shell("feh --bg-fill $HOME/Pictures/Wallpapers/furka-pass-in-switzerland-photo-credit-to-sepp-rutz-1920×1080.jpg")
-awful.spawn.with_shell("xscreensaver")
+awful.spawn.with_shell("dwall -s firewatch")

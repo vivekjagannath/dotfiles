@@ -25,7 +25,7 @@ border-size = 0
 border-color = ${colors.background}
 
 padding-left = 2
-padding-right = 2
+padding-right = 1
 
 module-margin-left = 2
 module-margin-right = 0
@@ -43,6 +43,7 @@ tray-padding = 2
 ;tray-transparent = true
 tray-background = ${colors.background}
 
+wm-restack = generic
 ;wm-restack = bspwm
 ;wm-restack = i3
 
@@ -123,7 +124,7 @@ interval = 1
 format-prefix = " "
 format-prefix-foreground = ${colors.spotify}
 format = <label>
-exec = python $HOME/.config/polybar/polybar-spotify.py -f '{song}: {artist}'
+exec = python3 $HOME/.config/polybar/polybar-spotify.py -f '{song}: {artist}'
 click-left = playerctl --player=spotify play-pause 
 click-right = playerctl --player=spotify next 
 click-middle = playerctl --player=spotify previous 
