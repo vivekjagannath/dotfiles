@@ -2,8 +2,8 @@ fpath+=${ZDOTDIR:-~}/.zsh_functions
 
 # Enable colors and change prompt:
 autoload -U colors && colors
-PROMPT="%F{blue}%~%f%B%F{yellow} %f%b  "
-#          
+PROMPT="%F{blue}%~%f%B%F{yellow}  %f%b  "
+#                    
 
 # History in cache directory:
 HISTSIZE=10000
@@ -28,8 +28,10 @@ function ranger-cd {
 }
 
 #Aliases
+alias ls='ls --color=auto'
 alias f='ranger-cd'
 alias v='vim'
+alias cw='feh --bg-fill --randomize $HOME/Pictures/Wallpapers/Nordic/'
 alias dotfiles='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
 # Basic auto/tab complete:
@@ -72,6 +74,13 @@ zle-line-init() {
 zle -N zle-line-init
 echo -ne '\e[6 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[6 q' ;} # Use beam shape cursor for each new prompt.
+
+#ls command colors
+export LS_COLORS="ow=1;34"
+
+#ROS
+source /opt/ros/noetic/setup.zsh
+source /home/vivek/catkin_ws/devel/setup.zsh
 
 # zsh-syntax-highlighting; should be last.
 source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

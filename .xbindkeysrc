@@ -10,12 +10,6 @@
 "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
   XF86AudioMicMute
 
-"xbacklight -10"
-  XF86MonBrightnessDown
-
-"xbacklight +10"
-  XF86MonBrightnessUp
-
 "flameshot full -p $HOME/Pictures/Screenshots/"
   Print
 
@@ -24,6 +18,9 @@
 
 "flameshot gui"
   Shift + Print
+
+"flameshot gui -r | zbarimg - | sed "s/^QR-Code://g" | xclip -selection clipboard 2>/dev/null"
+  Control + Shift + Print
 
 "playerctl play-pause"
   XF86AudioPlay
