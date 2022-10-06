@@ -116,6 +116,7 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 local clock = awful.widget.watch("date +'%A, %d %b  %H:%M'", 60)
 local month_calendar = awful.widget.calendar_popup.month()
 month_calendar:attach( clock, "br" )
+local spotify_widget = require("widgets.spotify-widget.spotify")
 
 local volume_widget = require("widgets/volume/volume")
 
@@ -157,8 +158,15 @@ awful.screen.connect_for_each_screen(function(s)
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
+			spotify_widget({
+				font = "Dank Mono Regular 11",
+				dim_when_paused = true,
+				max_length = 15,
+           		play_icon = '/usr/share/icons/Papirus-Light/24x24/categories/spotify.svg',
+           		pause_icon = '/usr/share/icons/Papirus-Dark/24x24/panel/spotify-indicator.svg'
+        	}),
         },
-		wibox.container.background(wibox.container.margin(clock, 870, 5)),
+		wibox.container.background(wibox.container.margin(clock, 670, 5)),
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
 			volume_widget(),
