@@ -125,6 +125,11 @@ local w4 = wibox.widget {
     layout = wibox.layout.flex.horizontal
 }
 
+local w5 = wibox.widget {
+    spacing = -775,
+    layout = wibox.layout.flex.horizontal
+}
+
 local function set_wallpaper(s)
     -- Wallpaper
     if beautiful.wallpaper then
@@ -161,19 +166,21 @@ awful.screen.connect_for_each_screen(function(s)
 			spotify_widget({
 				font = "Dank Mono Regular 11",
 				dim_when_paused = true,
-				max_length = 15,
+				max_length = 25,
            		play_icon = '/usr/share/icons/Papirus-Light/24x24/categories/spotify.svg',
            		pause_icon = '/usr/share/icons/Papirus-Dark/24x24/panel/spotify-indicator.svg'
         	}),
         },
-		wibox.container.background(wibox.container.margin(clock, 670, 5)),
+		NIL,
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
+			wibox.container.background(wibox.container.margin(clock, 570, 5)),
+			w5,
 			volume_widget(),
 			w4,
             wibox.widget.systray()
         },
-    }		
+	}
 end)
 -- }}}
 -- {{{ Mouse bindings
