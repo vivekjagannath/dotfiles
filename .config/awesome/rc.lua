@@ -115,18 +115,13 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 
 local clock = awful.widget.watch("date +'%A, %d %b  %H:%M'", 60)
 local month_calendar = awful.widget.calendar_popup.month()
-month_calendar:attach( clock, "br" )
+month_calendar:attach( clock, "bc" )
 local spotify_widget = require("widgets.spotify-widget.spotify")
 
 local volume_widget = require("widgets/volume/volume")
 
 local w4 = wibox.widget {
     spacing = -10,
-    layout = wibox.layout.flex.horizontal
-}
-
-local w5 = wibox.widget {
-    spacing = -775,
     layout = wibox.layout.flex.horizontal
 }
 
@@ -159,31 +154,48 @@ awful.screen.connect_for_each_screen(function(s)
 
     -- @DOC_SETUP_WIDGETS@
     -- Add widgets to the wibox
-    s.mywibox:setup {
-        layout = wibox.layout.align.horizontal,
-        { -- Left widgets
-            layout = wibox.layout.fixed.horizontal,
-			spotify_widget({
-				font = "Dank Mono Regular 11",
-				dim_when_paused = true,
-				max_length = 25,
-           		play_icon = '/usr/share/icons/Papirus-Light/24x24/categories/spotify.svg',
-           		pause_icon = '/usr/share/icons/Papirus-Dark/24x24/panel/spotify-indicator.svg'
-        	}),
-        },
-		NIL,
-        { -- Right widgets
-            layout = wibox.layout.fixed.horizontal,
-			wibox.container.background(wibox.container.margin(clock, 570, 5)),
-			w5,
-			volume_widget(),
-			w4,
-            wibox.widget.systray()
-        },
+	local left_widgets = {
+		layout = wibox.layout.fixed.horizontal,
+		spotify_widget({
+			font = "Dank Mono Regular 11",
+			dim_when_paused = true,
+			max_length = 25,
+			play_icon = '/usr/share/icons/Papirus-Light/24x24/categories/spotify.svg',
+			pause_icon = '/usr/share/icons/Papirus-Dark/24x24/panel/spotify-indicator.svg'
+		}),
 	}
+
+	local right_widgets = {
+		layout = wibox.layout.fixed.horizontal,
+		volume_widget(),
+		w4,
+		wibox.widget.systray(),
+	}
+
+	-- base layout for left and right
+	local base_layout = wibox.widget {
+		layout = wibox.layout.align.horizontal,
+		left_widgets,
+		nil,  -- no center widget here
+		right_widgets,
+	}
+
+	-- stack the clock on top, absolutely centered
+	s.mywibox:setup {
+		layout = wibox.layout.stack,
+		base_layout,
+		{
+			layout = wibox.layout.align.horizontal,
+			nil,
+			wibox.container.place(clock, "center"),
+			nil,
+		},
+	}
+
+
 end)
 -- }}}
--- {{{ Mouse bindings
+-- {{{ mouse bindings
 root.buttons(gears.table.join(
     awful.button({ }, 3, function () mymainmenu:toggle() end),
     awful.button({ }, 4, awful.tag.viewnext),
