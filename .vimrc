@@ -1,3 +1,5 @@
+silent! source $VIMRUNTIME/defaults.vim
+
 set nocompatible
 filetype on
 filetype plugin on
@@ -8,11 +10,11 @@ set nowrap
 set shiftwidth=4
 set tabstop=4
 set incsearch
+set nohlsearch
 set ignorecase
 set smartcase
 set showcmd
 set showmode
-set showmatch
 
 set wildmenu
 set wildmode=list:longest
@@ -45,6 +47,8 @@ nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-l> <c-w>l
 nnoremap <c-h> <c-w>h
+
+nnoremap <leader>h :set hlsearch!<CR>
 
 nnoremap <leader>gd :YcmCompleter GoTo<CR>
 nnoremap <leader>ut :UndotreeToggle<CR>
