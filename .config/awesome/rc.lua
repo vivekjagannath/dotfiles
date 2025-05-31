@@ -133,7 +133,7 @@ local function set_wallpaper(s)
         if type(wallpaper) == "function" then
             wallpaper = wallpaper(s)
         end
-        gears.wallpaper.maximized("$HOME/Pictures/Wallpapers/ign-0003.png", s, true)
+        gears.wallpaper.maximized(wallpaper, s, true)
     end
 end
 
@@ -508,4 +508,5 @@ awful.spawn.with_shell("xfce4-power-manager")
 awful.spawn.with_shell("nm-applet")
 -- awful.spawn.with_shell("$HOME/.config/polybar/launch.sh")
 awful.spawn.with_shell("xbindkeys --poll-rc")
-awful.spawn.with_shell("dwall -s firewatch")
+-- awful.spawn.with_shell("dwall -s firewatch")
+awful.spawn.with_shell("feh --bg-fill $HOME/Pictures/wallpaper_david.png")
