@@ -45,12 +45,12 @@ local function worker(user_args)
     local cur_title = ''
     local cur_album = ''
 
-    spotify_widget = wibox.widget {
+    local spotify_widget = wibox.widget {
 		{
             layout = wibox.container.scroll.horizontal,
-            max_size = 200,
+            max_size = 100,
             step_function = wibox.container.scroll.step_functions.waiting_nonlinear_back_and_forth,
-            speed = 40,
+            speed = 30,
             {
                 id = 'titlew',
                 font = font,
@@ -150,7 +150,7 @@ local function worker(user_args)
     if show_tooltip then
         local spotify_tooltip = awful.tooltip {
             mode = 'outside',
-            preferred_positions = {'bottom'},
+            preferred_positions = {'top'},
          }
 
         spotify_tooltip:add_to_object(spotify_widget)
